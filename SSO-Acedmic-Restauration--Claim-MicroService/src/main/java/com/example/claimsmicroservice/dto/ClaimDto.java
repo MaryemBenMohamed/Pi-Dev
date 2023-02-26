@@ -1,11 +1,8 @@
-package com.example.claimsmicroservice.EntitiesDTO;
+package com.example.claimsmicroservice.dto;
 
 import com.example.claimsmicroservice.entities.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-
-import java.io.Serializable;
 
 
 @Getter

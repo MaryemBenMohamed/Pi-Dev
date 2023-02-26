@@ -28,7 +28,6 @@ public interface ClaimRepository extends JpaRepository<Claim,Long> {
 
     @Query("SELECT c FROM Claim c WHERE lower(c.titre) LIKE lower(concat('%',:keywords,'%')) OR lower(c.description) LIKE lower(concat('%',:keywords,'%'))")
     List<Claim> findByKeywords(@Param("keywords") String keywords);
-    //Page<Claim> findByTitreContaining(String title);
 
 
 

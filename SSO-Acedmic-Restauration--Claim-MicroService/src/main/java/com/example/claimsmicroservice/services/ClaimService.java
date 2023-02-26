@@ -4,20 +4,20 @@ import com.example.claimsmicroservice.entities.Claim;
 import com.example.claimsmicroservice.entities.Status;
 import com.example.claimsmicroservice.entities.TypeReclamation;
 import com.example.claimsmicroservice.repositories.ClaimRepository;
-import com.example.claimsmicroservice.response.MessageResponse;
 import lombok.AllArgsConstructor;
-import org.apache.logging.log4j.message.Message;
-import org.springframework.data.domain.Page;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.Date;
 import java.util.List;
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ClaimService implements IServiceClaim {
 
     private ClaimRepository claimRepository;
+
 
     @Override
     public Claim addClaim(Claim claim) {
@@ -74,8 +74,10 @@ public class ClaimService implements IServiceClaim {
         return claimRepository.save(claim);
     }
     @Override
-    public Claim returnClaim(Claim claim){
+    public Claim returnClaim(Long id,Claim claimRequest){
+        Claim claim = claimRepository.findById(id).orElse(null);
         claim.setStatus(Status.RETOUR);
+        claim.setCause(claimRequest.getCause());
         return claimRepository.save(claim);
     }
     @Override
@@ -136,11 +138,47 @@ public class ClaimService implements IServiceClaim {
             return claimRepository.findByKeywords(keywords);
 
     }
+    @Scheduled(cron = "*/10 * * * * *")
+    @Override
+    public String Noticate() {
+        String msg = "";
+        List<Claim> claims = claimRepository.findAll();
+        for (Claim claim : claims) {
+            if (claim.getStatus().equals(Status.EN_COURS)) {
+                return msg = "!!! Claim RECEIVED! Time to verify";
+            }
+
+        }
+        return msg;
+
+    }
 
     /*@Override
-    public Page<Claim> findByTitreContaining(String title) {
-        return claimRepository.findByTitreContaining(title);
+    public String Noticate() {
+        Claim claim = new Claim();
+        if (claim.getStatus() == Status.EN_COURS) {
+            return "!!! Claim RECEIVED! Time to verify";
+
+
+        }
+            return "!!!No Claim RECEIVED!";
+
+        }*/
+
+
+    //@Scheduled(cron = "*/10 * * * * *")
+    /*void Noticated(){
+        List<Claim> claims = claimRepository.findAll();
+        for (Claim claim : claims){
+            if (claim.getStatus() == Status.EN_COURS)
+                System.out.println("!!! Claim RECEIVED! Time to verify");
+        }
+
     }*/
+
+
+
+
 
 
 }

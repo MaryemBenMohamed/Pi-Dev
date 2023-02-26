@@ -16,6 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Claim implements Serializable {
     @Id

@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Attachment implements Serializable {
     @Id
@@ -19,5 +20,6 @@ public class Attachment implements Serializable {
     Long id;
     String path;
     @ManyToOne
-    Claim claim;
+    private Claim claim;
+
 }

@@ -17,7 +17,7 @@ public interface IServiceClaim {
      void removeClaim(Long id);
      Integer nbClaimsResolu(Date dateDiff, Date dateRes);
      Claim resolveClaim(Claim claim);
-     Claim returnClaim(Claim claim);
+     Claim returnClaim(Long id,Claim claim);
      Claim archiveClaim(Claim claim);
      Claim editClaim(Claim claim);
      List<Claim> findReclamationByStatus();
@@ -31,7 +31,9 @@ public interface IServiceClaim {
      List<Claim> findClaimsByTypeReclamationReservation();
      List<Claim> findClaimsByTypeReclamationSubscription();
      List<Claim> search(String keywords);
-     //Page<Claim> findByTitreContaining(String title);
+     String Noticate();
+
+
 
 
 

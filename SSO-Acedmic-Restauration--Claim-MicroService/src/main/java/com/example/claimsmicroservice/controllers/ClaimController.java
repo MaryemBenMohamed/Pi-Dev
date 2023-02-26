@@ -1,24 +1,25 @@
 package com.example.claimsmicroservice.controllers;
 
-import com.example.claimsmicroservice.EntitiesDTO.ClaimDto;
+import com.example.claimsmicroservice.dto.ClaimDto;
 import com.example.claimsmicroservice.entities.Claim;
-import com.example.claimsmicroservice.entities.TypeReclamation;
+import com.example.claimsmicroservice.dto.ClaimRetourDto;
+import com.example.claimsmicroservice.entities.Status;
 import com.example.claimsmicroservice.services.IServiceClaim;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 import java.util.Date;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@Slf4j
 public class ClaimController {
     private IServiceClaim iServiceRec;
 
@@ -40,17 +41,17 @@ public class ClaimController {
 
 
     @PutMapping("/changeStatus/{id}")
-    public ResponseEntity<ClaimDto> updatePost(@PathVariable Long id, @RequestBody ClaimDto claimDto) {
+    public ResponseEntity<ClaimDto> changeStatus(@PathVariable Long id, @RequestBody ClaimDto claimDto) {
 
         // convert DTO to Entity
         Claim claimRequest = modelMapper.map(claimDto, Claim.class);
 
-        Claim post = iServiceRec.changeStatus(id, claimRequest);
+        Claim claim = iServiceRec.changeStatus(id, claimRequest);
 
         // entity to DTO
-        ClaimDto postResponse = modelMapper.map(post, ClaimDto.class);
+        ClaimDto claimResponse = modelMapper.map(claim, ClaimDto.class);
 
-        return ResponseEntity.ok().body(postResponse);
+        return ResponseEntity.ok().body(claimResponse);
     }
 
 
@@ -72,15 +73,24 @@ public class ClaimController {
     public Claim resolveClaim(@RequestBody Claim claim){
         return iServiceRec.resolveClaim(claim);
     }
-    @PatchMapping("/returnClaim")
-    public Claim returnClaim(@RequestBody Claim claim){
-        return iServiceRec.returnClaim(claim);
+    @PatchMapping("/returnClaim/{id}")
+    public ResponseEntity<ClaimRetourDto> returnClaim(@PathVariable Long id,@RequestBody ClaimRetourDto claimRetourDto){
+
+        // convert DTO to Entity
+        Claim claimRequest = modelMapper.map(claimRetourDto, Claim.class);
+
+        Claim claim = iServiceRec.returnClaim(id,claimRequest);
+
+        // entity to DTO
+        ClaimRetourDto claimResponse = modelMapper.map(claim, ClaimRetourDto.class);
+
+        return ResponseEntity.ok().body(claimResponse);
     }
     @PatchMapping("/archiveClaim")
     public Claim archiveClaim(@RequestBody Claim claim){
         return iServiceRec.archiveClaim(claim);
     }
-    @PatchMapping("/editClaim")
+    @PutMapping("/editClaim")
     public Claim editClaim(@RequestBody Claim claim) {
         return iServiceRec.editClaim(claim);
     }
@@ -130,11 +140,13 @@ public class ClaimController {
         return iServiceRec.search(keywords);
 
     }
+    @GetMapping("/Notication")
+    public String Noticate() {
+         return iServiceRec.Noticate();
 
-    /*@GetMapping("/findByTitreContaining")
-    public Page<Claim> findByTitreContaining(String title) {
-        return iServiceRec.findByTitreContaining(title);
-    }*/
+       }
+
+
 
 
 
