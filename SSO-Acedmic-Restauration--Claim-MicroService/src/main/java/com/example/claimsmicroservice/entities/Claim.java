@@ -1,14 +1,11 @@
 package com.example.claimsmicroservice.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -26,13 +23,16 @@ public class Claim implements Serializable {
     Date dateDiff;
     @Temporal(TemporalType.DATE)
     Date dateRes;
-    String titre;
+    String title;
     String description;
     String cause;
     @Enumerated(EnumType.STRING)
     Status status;
     @Enumerated(EnumType.STRING)
     TypeReclamation typeReclamation;
+    String username;
+
+
 
 
 

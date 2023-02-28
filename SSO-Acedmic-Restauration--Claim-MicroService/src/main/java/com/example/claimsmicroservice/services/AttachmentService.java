@@ -4,19 +4,17 @@ import com.example.claimsmicroservice.entities.Attachment;
 import com.example.claimsmicroservice.entities.Claim;
 import com.example.claimsmicroservice.repositories.AttachmentRepository;
 import com.example.claimsmicroservice.repositories.ClaimRepository;
-import com.example.claimsmicroservice.response.MessageResponse;
+import com.example.claimsmicroservice.responses.MessageResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -44,10 +42,10 @@ public class AttachmentService implements IServiceAttachment{
             }
         }  catch (IOException e) {
             e.printStackTrace();
-            return new MessageResponse(false, "Attention", "Opération non effectuée");
+            return new MessageResponse(false, "Attention", "Operation not effectuated");
         }
 
-        return  new MessageResponse(true, "Succès", "Opération effectuée");
+        return  new MessageResponse(true, "Success", "Operation not effectuated");
 
     }
 

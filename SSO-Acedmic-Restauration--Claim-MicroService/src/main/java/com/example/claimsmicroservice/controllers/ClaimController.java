@@ -4,7 +4,10 @@ import com.example.claimsmicroservice.dto.ClaimDto;
 import com.example.claimsmicroservice.entities.Claim;
 import com.example.claimsmicroservice.dto.ClaimRetourDto;
 import com.example.claimsmicroservice.entities.Status;
+import com.example.claimsmicroservice.responses.MessageResponse;
+import com.example.claimsmicroservice.services.ClaimService;
 import com.example.claimsmicroservice.services.IServiceClaim;
+import com.example.claimsmicroservice.usermcroservices.UserDtoClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -24,10 +27,11 @@ public class ClaimController {
     private IServiceClaim iServiceRec;
 
     private ModelMapper modelMapper;
+    private UserDtoClient userDtoClient;
 
-    @PostMapping("/addClaim")
-    public Claim addReclamation(@RequestBody Claim claim){
-        return iServiceRec.addClaim(claim);
+    @PostMapping("/addClaim/{id}")
+    public Claim addReclamation(@RequestBody Claim claim,@PathVariable("id") String username){
+        return iServiceRec.addClaim(claim,username);
     }
 
     @GetMapping("/allClaims")
@@ -145,6 +149,24 @@ public class ClaimController {
          return iServiceRec.Noticate();
 
        }
+    @GetMapping("/listUser")
+    public String getUsersInfo() {
+        return "Accessing from USER-SERVICE ==> " + userDtoClient.listUsers();
+    }
+
+    @GetMapping("/getClaimsByUser/{username}")
+    public ResponseEntity<List<Claim>> getClaimsByUser (@PathVariable String username) {
+
+        List<Claim> reclamations = iServiceRec.findByUsername(username);
+
+        return new ResponseEntity<>(reclamations, HttpStatus.OK);
+    }
+
+    /*@PostMapping("/banUserToAddClaim/{username}")
+    public void banUserToAddClaim(@RequestBody Claim claim, @PathVariable String username) {
+         iServiceRec.banUserToAddClaim(claim,username);
+    }*/
+
 
 
 

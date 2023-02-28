@@ -20,9 +20,10 @@ public class ClaimService implements IServiceClaim {
 
 
     @Override
-    public Claim addClaim(Claim claim) {
+    public Claim addClaim(Claim claim, String username) {
         claim.setDateDiff(new Date());
         claim.setStatus(Status.EN_COURS);
+        claim.setUsername(username);
         return claimRepository.save(claim);
     }
 
@@ -138,7 +139,7 @@ public class ClaimService implements IServiceClaim {
             return claimRepository.findByKeywords(keywords);
 
     }
-    @Scheduled(cron = "*/10 * * * * *")
+    @Scheduled(cron = "*/60 * * * * *")
     @Override
     public String Noticate() {
         String msg = "";
@@ -149,36 +150,24 @@ public class ClaimService implements IServiceClaim {
             }
 
         }
-        return msg;
+        return msg+ claimRepository.countByStatus(Status.EN_COURS);
+        //return msg;
 
     }
 
-    /*@Override
-    public String Noticate() {
-        Claim claim = new Claim();
-        if (claim.getStatus() == Status.EN_COURS) {
-            return "!!! Claim RECEIVED! Time to verify";
+    @Override
+    public List<Claim> findByUsername(String username) {
 
-
+            return claimRepository.findByUsername(username);
         }
-            return "!!!No Claim RECEIVED!";
 
-        }*/
-
-
-    //@Scheduled(cron = "*/10 * * * * *")
-    /*void Noticated(){
-        List<Claim> claims = claimRepository.findAll();
-        for (Claim claim : claims){
-            if (claim.getStatus() == Status.EN_COURS)
-                System.out.println("!!! Claim RECEIVED! Time to verify");
+    /*@Override
+    public void banUserToAddClaim(Claim claim,String username) {
+        if (claimRepository.countClaimsByUsername(username)<2){
+            claimRepository.save(claim);
         }
 
     }*/
-
-
-
-
 
 
 }

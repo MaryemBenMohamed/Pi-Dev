@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface IServiceClaim {
-     Claim addClaim (Claim claim);
+     Claim addClaim (Claim claim, String username);
      List<Claim> findAllClaims();
      Claim findClaimById(Long id);
      Claim changeStatus(Long id,Claim claimRequest);
@@ -32,6 +32,10 @@ public interface IServiceClaim {
      List<Claim> findClaimsByTypeReclamationSubscription();
      List<Claim> search(String keywords);
      String Noticate();
+     List<Claim> findByUsername(String username);
+     //void banUserToAddClaim(Claim claim,String username);
+
+
 
 
 

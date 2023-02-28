@@ -3,7 +3,6 @@ package com.example.claimsmicroservice.repositories;
 import com.example.claimsmicroservice.entities.Claim;
 import com.example.claimsmicroservice.entities.Status;
 import com.example.claimsmicroservice.entities.TypeReclamation;
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,8 +25,13 @@ public interface ClaimRepository extends JpaRepository<Claim,Long> {
 
     List<Claim> findClaimsByTypeReclamation(TypeReclamation typeReclamation);
 
-    @Query("SELECT c FROM Claim c WHERE lower(c.titre) LIKE lower(concat('%',:keywords,'%')) OR lower(c.description) LIKE lower(concat('%',:keywords,'%'))")
+    @Query("SELECT c FROM Claim c WHERE lower(c.title) LIKE lower(concat('%',:keywords,'%')) OR lower(c.description) LIKE lower(concat('%',:keywords,'%'))")
     List<Claim> findByKeywords(@Param("keywords") String keywords);
+
+    List<Claim> findByUsername(String username);
+    long countByAndUsername(String username);
+
+
 
 
 

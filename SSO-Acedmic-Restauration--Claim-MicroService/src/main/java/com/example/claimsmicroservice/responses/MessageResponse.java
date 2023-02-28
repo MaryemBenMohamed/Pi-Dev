@@ -1,4 +1,4 @@
-package com.example.claimsmicroservice.response;
+package com.example.claimsmicroservice.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

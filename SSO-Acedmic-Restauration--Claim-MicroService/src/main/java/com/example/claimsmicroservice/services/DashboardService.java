@@ -1,9 +1,10 @@
 package com.example.claimsmicroservice.services;
 
+import com.example.claimsmicroservice.entities.Claim;
 import com.example.claimsmicroservice.entities.Status;
 import com.example.claimsmicroservice.repositories.ClaimRepository;
-import com.example.claimsmicroservice.response.BarResponse;
-import com.example.claimsmicroservice.response.PieResponse;
+import com.example.claimsmicroservice.responses.BarResponse;
+import com.example.claimsmicroservice.responses.PieResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +70,22 @@ public class DashboardService {
         barResponse.setLine1(line1);
 
         return barResponse;
+
+
+    }
+
+    public PieResponse pieClaimByUser(String username){
+
+        PieResponse pieResponse = new PieResponse();
+        List<String> labels = new ArrayList<>();
+        labels.add("UserName:");
+
+        List<Long> values = new ArrayList<>();
+        values.add(claimRepository.countByAndUsername(username));
+
+        pieResponse.setValues(values);
+        pieResponse.setLabels(labels);
+        return  pieResponse;
 
 
     }
