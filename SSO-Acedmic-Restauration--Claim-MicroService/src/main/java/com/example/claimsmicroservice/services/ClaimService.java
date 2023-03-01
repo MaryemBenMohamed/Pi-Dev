@@ -4,10 +4,15 @@ import com.example.claimsmicroservice.entities.Claim;
 import com.example.claimsmicroservice.entities.Status;
 import com.example.claimsmicroservice.entities.TypeReclamation;
 import com.example.claimsmicroservice.repositories.ClaimRepository;
+import com.example.claimsmicroservice.usermcroservices.UserDtoClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.util.Date;
 import java.util.List;
@@ -17,14 +22,18 @@ import java.util.List;
 public class ClaimService implements IServiceClaim {
 
     private ClaimRepository claimRepository;
-
+    private JavaMailSender javaMailSender;
 
     @Override
     public Claim addClaim(Claim claim, String username) {
         claim.setDateDiff(new Date());
         claim.setStatus(Status.EN_COURS);
         claim.setUsername(username);
-        return claimRepository.save(claim);
+        //return claimRepository.save(claim);
+
+        Claim newClaim = claimRepository.save(claim);
+        sendClaimConfirmationEmail(newClaim);
+        return newClaim;
     }
 
     @Override
@@ -150,24 +159,58 @@ public class ClaimService implements IServiceClaim {
             }
 
         }
-        return msg+ claimRepository.countByStatus(Status.EN_COURS);
-        //return msg;
+        //return msg+ claimRepository.countByStatus(Status.EN_COURS);
+        return msg;
 
     }
 
     @Override
     public List<Claim> findByUsername(String username) {
 
-            return claimRepository.findByUsername(username);
+            return claimRepository.findClaimsByUsername(username);
         }
 
-    /*@Override
-    public void banUserToAddClaim(Claim claim,String username) {
-        if (claimRepository.countClaimsByUsername(username)<2){
-            claimRepository.save(claim);
-        }
 
+   /* @Override
+    public void banUserToAddClaim(String username,Long id) {
+        if (claimRepository.countClaimByUsername(username)>2)
+            claimRepository.deleteById(id);
+        else {
+            throw new NotFoundException("User with id: " + id + " not found");
+        }
     }*/
+
+
+    @Override
+    public void banUserToAddClaim(String email,Long id) {
+        if (claimRepository.countClaimByEmail(email)>2)
+            claimRepository.deleteById(id);
+        else {
+            throw new NotFoundException("User with email: " + email + " not permitted");
+        }
+    }
+
+    @Override
+    public void banSave (Claim claim,String email) {
+        if (claimRepository.countClaimByEmail(email)<2)
+            claimRepository.save(claim);
+        else {
+            throw new NotFoundException("User with email: " + claim + " not permitted");
+        }
+    }
+
+
+
+    public void sendClaimConfirmationEmail(Claim claim) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(claim.getEmail());
+        mailMessage.setSubject("Confirmation");
+        mailMessage.setText("Good morning " + claim.getTitle() + ",\n\n" +
+                "Your Claim has been considered for the " + claim.getDateDiff() + ".\n\n" +
+                "Cordially,\n\n" +
+                "Hot-Stuff-Dev");
+        javaMailSender.send(mailMessage);
+    }
 
 
 }

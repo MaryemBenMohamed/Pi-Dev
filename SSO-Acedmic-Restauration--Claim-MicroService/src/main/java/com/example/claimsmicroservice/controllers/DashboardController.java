@@ -25,9 +25,9 @@ public class DashboardController {
         return  dashboardService.getClaims();
     }
 
-    @GetMapping("/getNbClaimByStatusAndUser/{username}")
-    public PieResponse getNbClaimByStatusAndUser(@PathVariable String username) {
-        return  dashboardService.pieClaimByUser(username);
+        @GetMapping("/nbClaimByStatusAndUsername/{username}")
+    public PieResponse getNbClaimByStatusAndUsername(@PathVariable String username) {
+        return  dashboardService.pieClaimByStatusAndUsername(username);
     }
 
 

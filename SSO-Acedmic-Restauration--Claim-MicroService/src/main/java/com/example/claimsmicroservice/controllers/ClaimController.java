@@ -28,9 +28,9 @@ public class ClaimController {
 
     private ModelMapper modelMapper;
     private UserDtoClient userDtoClient;
-
-    @PostMapping("/addClaim/{id}")
-    public Claim addReclamation(@RequestBody Claim claim,@PathVariable("id") String username){
+    private ClaimService claimService;
+    @PostMapping("/addClaim/{username}")
+    public Claim addReclamation(@RequestBody Claim claim,@PathVariable String username){
         return iServiceRec.addClaim(claim,username);
     }
 
@@ -144,7 +144,7 @@ public class ClaimController {
         return iServiceRec.search(keywords);
 
     }
-    @GetMapping("/Notication")
+    @GetMapping("/sendMessageNotif")
     public String Noticate() {
          return iServiceRec.Noticate();
 
@@ -154,18 +154,26 @@ public class ClaimController {
         return "Accessing from USER-SERVICE ==> " + userDtoClient.listUsers();
     }
 
-    @GetMapping("/getClaimsByUser/{username}")
-    public ResponseEntity<List<Claim>> getClaimsByUser (@PathVariable String username) {
+    @GetMapping("/getClaimsByUsername/{username}")
+    public ResponseEntity<List<Claim>> getClaimsByUsername (@PathVariable String username) {
 
         List<Claim> reclamations = iServiceRec.findByUsername(username);
 
         return new ResponseEntity<>(reclamations, HttpStatus.OK);
     }
 
-    /*@PostMapping("/banUserToAddClaim/{username}")
-    public void banUserToAddClaim(@RequestBody Claim claim, @PathVariable String username) {
-         iServiceRec.banUserToAddClaim(claim,username);
-    }*/
+
+    @DeleteMapping("/banUserToAddClaim/{email}/{id}")
+    public ResponseEntity ban(@PathVariable String email, @PathVariable Long id) {
+        claimService.banUserToAddClaim(email, id);
+        return ResponseEntity.ok(new MessageResponse(true, "Success", "Username is banned"));
+    }
+
+    @PostMapping("/banUserToAddClaim/{email}")
+    public ResponseEntity ban(@RequestBody Claim claim ,@PathVariable String email) {
+        claimService.banSave(claim,email);
+        return ResponseEntity.ok(new MessageResponse(true, "Success", "You are permitted"));
+    }
 
 
 

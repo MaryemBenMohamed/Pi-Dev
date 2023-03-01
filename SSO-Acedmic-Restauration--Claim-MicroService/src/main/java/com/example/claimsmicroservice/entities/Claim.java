@@ -31,6 +31,7 @@ public class Claim implements Serializable {
     @Enumerated(EnumType.STRING)
     TypeReclamation typeReclamation;
     String username;
+    String email;
 
 
 

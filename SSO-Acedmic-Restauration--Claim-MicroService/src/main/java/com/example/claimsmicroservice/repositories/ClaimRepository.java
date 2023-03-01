@@ -28,8 +28,12 @@ public interface ClaimRepository extends JpaRepository<Claim,Long> {
     @Query("SELECT c FROM Claim c WHERE lower(c.title) LIKE lower(concat('%',:keywords,'%')) OR lower(c.description) LIKE lower(concat('%',:keywords,'%'))")
     List<Claim> findByKeywords(@Param("keywords") String keywords);
 
-    List<Claim> findByUsername(String username);
-    long countByAndUsername(String username);
+    List<Claim> findClaimsByUsername(String username);
+    long countByStatusAndUsername(Status status,String username);
+
+    //long countClaimByUsername(String username);
+    long countClaimByEmail(String email);
+
 
 
 

@@ -33,7 +33,8 @@ public interface IServiceClaim {
      List<Claim> search(String keywords);
      String Noticate();
      List<Claim> findByUsername(String username);
-     //void banUserToAddClaim(Claim claim,String username);
+     void banUserToAddClaim(String email,Long id);
+     public void banSave (Claim claim,String email);
 
 
 

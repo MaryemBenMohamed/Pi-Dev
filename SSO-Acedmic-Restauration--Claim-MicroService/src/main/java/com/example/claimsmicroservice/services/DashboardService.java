@@ -74,15 +74,24 @@ public class DashboardService {
 
     }
 
-    public PieResponse pieClaimByUser(String username){
+
+    public PieResponse pieClaimByStatusAndUsername(String username){
+        Claim claim= new Claim();
+        claim.setUsername(username);
 
         PieResponse pieResponse = new PieResponse();
         List<String> labels = new ArrayList<>();
-        labels.add("UserName:");
-
+        labels.add("In progress");
+        labels.add("Resolve");
+        labels.add("Archived");
+        labels.add("Returned");
+        labels.add("Modified");
         List<Long> values = new ArrayList<>();
-        values.add(claimRepository.countByAndUsername(username));
-
+        values.add(claimRepository.countByStatusAndUsername(Status.EN_COURS,username));
+        values.add(claimRepository.countByStatusAndUsername(Status.RESOLU,username));
+        values.add(claimRepository.countByStatusAndUsername(Status.ARCHIVER,username));
+        values.add(claimRepository.countByStatusAndUsername(Status.RETOUR,username));
+        values.add(claimRepository.countByStatusAndUsername(Status.MODIFIER,username));
         pieResponse.setValues(values);
         pieResponse.setLabels(labels);
         return  pieResponse;
